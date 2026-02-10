@@ -1,6 +1,9 @@
 package nl.sol.puzzles.grid;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 final public class GridLayoutGeneratorUtil {
 
@@ -37,5 +40,26 @@ final public class GridLayoutGeneratorUtil {
         return row * gridSize + col;
     }
 
+public static int[][] generateNumberSaladDefaultLayout(String name) {
+    if (name == null || name.isBlank()) {
+        throw new IllegalArgumentException("Pattern name is required. Available: " +
+                Arrays.stream(NumberSaladPattern.values())
+                      .map(Enum::name)
+                      .collect(Collectors.joining(", ")));
+    }
 
+    String normalized = name.trim().toUpperCase(Locale.ROOT);
+
+    try {
+        return NumberSaladPattern.valueOf(normalized).adjacency();
+    } catch (IllegalArgumentException ex) {
+        throw new IllegalArgumentException(
+                "Unknown pattern '" + name + "'. Available: " +
+                Arrays.stream(NumberSaladPattern.values())
+                      .map(Enum::name)
+                      .collect(Collectors.joining(", ")),
+                ex
+        );
+    }
+}
 }
